@@ -1,4 +1,4 @@
-# Next + Nest + Postgres
+# Next.js + NestJS + PostgreSQL 使って勉強する用
 
 ## ローカルで開発環境を立ち上げる
 
