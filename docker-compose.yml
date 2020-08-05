@@ -18,27 +18,33 @@ services:
 
     frontend:
         container_name: frontend
-        build: ./frontend
-        command: yarn dev
+        image: node:14.4.0-alpine
+        working_dir: /app/frontend
+        restart: always
         volumes:
-          - ./frontend:/app/frontend
+            - ./frontend:/app/frontend
+            - ./app/frontend/.next
         ports:
-          - "3000:3000"
+            - "3000:3000"
         depends_on:
             - backend
         tty: true
+        command: sh -c 'yarn && yarn run dev'
 
     backend:
         container_name: backend
-        build: ./backend
-        command: yarn start:dev
+        image: node:14.4.0-alpine
+        working_dir: /app/backend
+        restart: always
         volumes:
             - ./backend:/app/backend
+            - ./app/backend/dist
         ports:
             - "8080:8080"
         depends_on:
             - db
-        tty: true 
+        tty: true
+        command: sh -c 'yarn global add @nestjs/cli && yarn && yarn start:dev'
         
     db:
         image: postgres:11.5
@@ -48,7 +54,6 @@ services:
         ports:
             - "5432:5432"
         environment:
-            # POSTGRES_USER: postgres
             POSTGRES_PASSWORD: password
             POSTGRES_DB: test
             TZ: "Asia/Tokyo"
